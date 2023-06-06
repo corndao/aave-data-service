@@ -15,7 +15,10 @@ interface Market {
 export async function fetchMarketsData(): Promise<Market[]> {
   const lendingPoolAddressProvider = markets.AaveV3Arbitrum.POOL_ADDRESSES_PROVIDER;
   const provider = new ethers.providers.JsonRpcProvider(
-    'https://arb-mainnet-public.unifra.io',
+    {
+      skipFetchSetup: true,
+      url: 'https://arb-mainnet-public.unifra.io',
+    }
   );
   
   // View contract used to fetch all reserves data (including market base currency data), and user reserves
