@@ -16,6 +16,8 @@ export async function fetchMarketsData(): Promise<Market[]> {
   const lendingPoolAddressProvider = markets.AaveV3Arbitrum.POOL_ADDRESSES_PROVIDER;
   const provider = new ethers.providers.JsonRpcProvider(
     {
+      // `skipFetchSetup` is required for Cloudflare Worker according to the issue: 
+      // https://github.com/ethers-io/ethers.js/issues/1886#issuecomment-1063531514
       skipFetchSetup: true,
       url: 'https://arb-mainnet-public.unifra.io',
     }
