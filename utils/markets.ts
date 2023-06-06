@@ -1,5 +1,8 @@
 import { formatReserves, } from '@aave/math-utils';
-import { getTimestamp, lendingPoolAddressProvider, poolDataProviderContract } from './helper';
+import { getTimestamp, } from './helper';
+import * as markets from '@bgd-labs/aave-address-book';
+import { ethers } from 'ethers';
+import { UiPoolDataProvider, ChainId } from '@aave/contract-helpers';
 
 interface Market {
   id: string,
@@ -10,6 +13,18 @@ interface Market {
 }
 
 export async function fetchMarketsData(): Promise<Market[]> {
+  const lendingPoolAddressProvider = markets.AaveV3Arbitrum.POOL_ADDRESSES_PROVIDER;
+  const provider = new ethers.providers.JsonRpcProvider(
+    'https://arb-mainnet-public.unifra.io',
+  );
+  
+  // View contract used to fetch all reserves data (including market base currency data), and user reserves
+  // Using Aave V3 Eth Mainnet address for demo
+  const poolDataProviderContract = new UiPoolDataProvider({
+    uiPoolDataProviderAddress: markets.AaveV3Arbitrum.UI_POOL_DATA_PROVIDER,
+    provider,
+    chainId: ChainId.arbitrum_one,
+  });
   // Object containing array of pool reserves and market base currency data
   // { reservesArray, baseCurrencyData }
   const reserves = await poolDataProviderContract.getReservesHumanized({
@@ -34,3 +49,5 @@ export async function fetchMarketsData(): Promise<Market[]> {
     };
   });
 }
+
+fetchMarketsData().then(console.log);
