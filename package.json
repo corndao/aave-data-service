@@ -5,7 +5,8 @@
   "author": "Daniel Wang",
   "license": "MIT",
   "scripts": {
-    "start": "yarn netlify dev"
+    "start": "yarn wrangler pages dev ./",
+    "deploy": "yarn wrangler pages deploy ./ --project-name aave-api"
   },
   "devDependencies": {
     "typescript": "^5.1.3",
