@@ -1,7 +1,7 @@
+import { UiPoolDataProvider } from '@aave/contract-helpers';
 import { formatReserves, } from '@aave/math-utils';
-import { chainId, getTimestamp, lendingPoolAddressProvider, providerRPC, uiPoolDataProviderAddress, } from './helper';
 import { ethers } from 'ethers';
-import { UiPoolDataProvider, ChainId } from '@aave/contract-helpers';
+import { chainId, getTimestamp, lendingPoolAddressProvider, providerRPC, uiPoolDataProviderAddress, } from './helper';
 
 interface Market {
   id: string,

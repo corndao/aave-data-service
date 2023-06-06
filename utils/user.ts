@@ -1,7 +1,7 @@
-import { formatReserves, formatUserSummary } from '@aave/math-utils';
-import { chainId, getTimestamp, lendingPoolAddressProvider, providerRPC, uiPoolDataProviderAddress, } from './helper';
-import { ethers } from 'ethers';
 import { UiPoolDataProvider } from '@aave/contract-helpers';
+import { formatReserves, formatUserSummary } from '@aave/math-utils';
+import { ethers } from 'ethers';
+import { chainId, getTimestamp, lendingPoolAddressProvider, providerRPC, uiPoolDataProviderAddress, } from './helper';
 
 interface UserDeposit {
   underlyingAsset: string,

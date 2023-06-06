@@ -1,4 +1,3 @@
-import { fetchMarketsData } from "../../utils/markets";
 import { fetchUserDepositData } from "../../utils/user";
 
 const headers = {
