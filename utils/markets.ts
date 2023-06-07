@@ -9,6 +9,7 @@ interface Market {
   name: string,
   symbol: string,
   decimals: number, 
+  supplyAPY: string,
 }
 
 export async function fetchMarketsData(): Promise<Market[]> {
@@ -50,6 +51,7 @@ export async function fetchMarketsData(): Promise<Market[]> {
       name: reserve.name,
       symbol: reserve.symbol,
       decimals: reserve.decimals,
+      supplyAPY: reserve.supplyAPY,
     };
   });
 }
