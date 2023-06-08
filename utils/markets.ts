@@ -11,6 +11,7 @@ interface Market {
   decimals: number, 
   supplyAPY: string,
   marketReferencePriceInUsd: string,
+  usageAsCollateralEnabled: boolean,
 }
 
 export async function fetchMarketsData(): Promise<Market[]> {
@@ -54,6 +55,7 @@ export async function fetchMarketsData(): Promise<Market[]> {
       decimals: reserve.decimals,
       supplyAPY: reserve.supplyAPY,
       marketReferencePriceInUsd: reserve.priceInUSD,
+      usageAsCollateralEnabled: reserve.usageAsCollateralEnabled
     };
   });
 }
