@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "yarn wrangler pages dev ./",
-    "deploy": "yarn wrangler pages deploy ./ --project-name aave-api"
+    "deploy": "yarn wrangler pages deploy ./ --project-name aave-api --env production"
   },
   "devDependencies": {
     "typescript": "^5.1.3",
