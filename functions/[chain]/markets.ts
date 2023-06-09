@@ -1,4 +1,5 @@
-import { fetchMarketsData } from "../utils/markets";
+import { ChainId } from "@aave/contract-helpers";
+import { fetchMarketsData } from "../../utils/markets";
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -11,7 +12,7 @@ interface Env {
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const res = await fetchMarketsData();
+  const res = await fetchMarketsData(context.params.chain as any);
  	return new Response(JSON.stringify(res), {
     status: 200,
     headers,

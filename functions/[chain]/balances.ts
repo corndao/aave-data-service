@@ -1,4 +1,4 @@
-import { fetchTokenBalances } from "../utils/token";
+import { fetchTokenBalances } from "../../utils/token";
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -25,7 +25,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     });
   }
 
-  const res = await fetchTokenBalances(account, tokens);
+  const res = await fetchTokenBalances(context.params.chain as any, account, tokens);
  	return new Response(JSON.stringify(res), {
     status: 200,
     headers,
