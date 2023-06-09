@@ -1,4 +1,4 @@
-import { fetchUserDepositData } from "../../utils/user";
+import { fetchUserDepositData } from "../../../utils/user";
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -11,7 +11,7 @@ interface Env {
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const res = await fetchUserDepositData(context.params.user as string);
+  const res = await fetchUserDepositData(context.params.chain as any, context.params.user as string);
  	return new Response(JSON.stringify(res), {
     status: 200,
     headers,

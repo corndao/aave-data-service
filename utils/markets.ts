@@ -1,7 +1,7 @@
-import { UiPoolDataProvider } from '@aave/contract-helpers';
+import { ChainId, UiPoolDataProvider } from '@aave/contract-helpers';
 import { formatReserves, } from '@aave/math-utils';
 import { ethers } from 'ethers';
-import { chainId, getTimestamp, lendingPoolAddressProvider, providerRPC, uiPoolDataProviderAddress, } from './helper';
+import { chainConfig, getTimestamp, } from './helper';
 
 interface Market {
   id: string,
@@ -14,20 +14,25 @@ interface Market {
   usageAsCollateralEnabled: boolean,
 }
 
-export async function fetchMarketsData(): Promise<Market[]> {
+export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
+  const chain = chainConfig[chainId];
+  if (!chain) {
+    throw new Error('bad chain id');
+  }
+
   const provider = new ethers.providers.JsonRpcProvider(
     {
       // `skipFetchSetup` is required for Cloudflare Worker according to the issue: 
       // https://github.com/ethers-io/ethers.js/issues/1886#issuecomment-1063531514
       skipFetchSetup: true,
-      url: providerRPC,
+      url: chain.providerRPC,
     }
   );
   
   // View contract used to fetch all reserves data (including market base currency data), and user reserves
   // Using Aave V3 Eth Mainnet address for demo
   const poolDataProviderContract = new UiPoolDataProvider({
-    uiPoolDataProviderAddress,
+    uiPoolDataProviderAddress: chain.uiPoolDataProviderAddress,
     provider,
     chainId,
   });
@@ -35,7 +40,7 @@ export async function fetchMarketsData(): Promise<Market[]> {
   // Object containing array of pool reserves and market base currency data
   // { reservesArray, baseCurrencyData }
   const reserves = await poolDataProviderContract.getReservesHumanized({
-    lendingPoolAddressProvider: lendingPoolAddressProvider,
+    lendingPoolAddressProvider: chain.lendingPoolAddressProvider,
   });
 
   const formattedPoolReserves = formatReserves({
