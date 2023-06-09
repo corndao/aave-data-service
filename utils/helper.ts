@@ -12,7 +12,17 @@ export const chainConfig: {
     providerRPC: "https://arb-mainnet-public.unifra.io",
     uiPoolDataProviderAddress: markets.AaveV3Arbitrum.UI_POOL_DATA_PROVIDER,
     lendingPoolAddressProvider: markets.AaveV3Arbitrum.POOL_ADDRESSES_PROVIDER, 
-  }
+  },
+  [ChainId.mainnet]: {
+    providerRPC: "https://eth-rpc.gateway.pokt.network",
+    uiPoolDataProviderAddress: markets.AaveV3Ethereum.UI_POOL_DATA_PROVIDER,
+    lendingPoolAddressProvider: markets.AaveV3Ethereum.POOL_ADDRESSES_PROVIDER,
+  },
+  [ChainId.polygon]: {
+    providerRPC: "https://polygon.llamarpc.com",
+    uiPoolDataProviderAddress: markets.AaveV3Polygon.UI_POOL_DATA_PROVIDER,
+    lendingPoolAddressProvider: markets.AaveV3Polygon.POOL_ADDRESSES_PROVIDER,
+  },
 }
 
 export function getTimestamp() {
