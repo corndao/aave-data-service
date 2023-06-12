@@ -12,6 +12,7 @@ interface Market {
   supplyAPY: string,
   marketReferencePriceInUsd: string,
   usageAsCollateralEnabled: boolean,
+  aTokenAddress: string,
 }
 
 export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
@@ -60,7 +61,8 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
       decimals: reserve.decimals,
       supplyAPY: reserve.supplyAPY,
       marketReferencePriceInUsd: reserve.priceInUSD,
-      usageAsCollateralEnabled: reserve.usageAsCollateralEnabled
+      usageAsCollateralEnabled: reserve.usageAsCollateralEnabled,
+      aTokenAddress: reserve.aTokenAddress,
     };
   });
 }
