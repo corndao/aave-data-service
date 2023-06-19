@@ -1,19 +1,22 @@
 import { fetchUserDepositData } from "../../../utils/user";
 
 const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
 };
 
 interface Env {
-	KV: KVNamespace;
+  KV: KVNamespace;
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const res = await fetchUserDepositData(context.params.chain as any, context.params.user as string);
- 	return new Response(JSON.stringify(res), {
+  const res = await fetchUserDepositData(
+    context.params.chain as any,
+    context.params.user as string
+  );
+  return new Response(JSON.stringify(res), {
     status: 200,
     headers,
   });
-}
+};
