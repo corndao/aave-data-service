@@ -63,7 +63,9 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
       marketReferencePriceInUsd: reserve.priceInUSD,
       usageAsCollateralEnabled: reserve.usageAsCollateralEnabled,
       aTokenAddress: reserve.aTokenAddress,
-      isIsolated: reserve.isIsolated
+      isIsolated: reserve.isIsolated,
+      availableLiquidity: reserve.availableLiquidity,
+      availableLiquidityUSD: reserve.availableLiquidityUSD,
     };
   });
 }
