@@ -1,7 +1,19 @@
-import { ChainId, UiPoolDataProvider } from "@aave/contract-helpers";
-import { formatReserves, formatUserSummary } from "@aave/math-utils";
+import {
+  ChainId,
+  ReserveDataHumanized,
+  UiPoolDataProvider,
+  UserReserveData,
+} from "@aave/contract-helpers";
+import {
+  ComputedUserReserve,
+  FormatReserveResponse,
+  formatReserves,
+  formatUserSummary,
+} from "@aave/math-utils";
 import { ethers } from "ethers";
 import { chainConfig, getTimestamp } from "./helper";
+import { fetchFormattedPoolReserves } from "./markets";
+import * as _ from "lodash";
 
 interface UserDeposit {
   underlyingAsset: string;
@@ -13,10 +25,25 @@ interface UserDeposit {
   underlyingBalanceUSD: string;
 }
 
-export async function fetchUserDepositData(
-  chainId: ChainId,
-  userAddress: string
-): Promise<UserDeposit[]> {
+interface UserDebtSummary {
+  healthFactor: string;
+  netWorthUSD: string;
+  availableBorrowsUSD: string;
+  netAPY: number;
+  debts: UserDebt[];
+}
+
+interface UserDebt {
+  underlyingAsset: string;
+  name: string;
+  symbol: string;
+  usageAsCollateralEnabledOnUser: boolean;
+  scaledVariableDebt: string;
+  variableBorrows: string;
+  variableBorrowsUSD: string;
+}
+
+async function fetchUserSummary(chainId: ChainId, userAddress: string) {
   const chain = chainConfig[chainId];
   if (!chain) {
     throw new Error("bad chain id");
@@ -65,7 +92,7 @@ export async function fetchUserDepositData(
       baseCurrencyData.marketReferenceCurrencyPriceInUsd,
   });
 
-  const userSummary = formatUserSummary({
+  return formatUserSummary({
     currentTimestamp,
     marketReferencePriceInUsd:
       baseCurrencyData.marketReferenceCurrencyPriceInUsd,
@@ -75,7 +102,13 @@ export async function fetchUserDepositData(
     formattedReserves: formattedPoolReserves,
     userEmodeCategoryId: userReserves.userEmodeCategoryId,
   });
+}
 
+export async function fetchUserDepositData(
+  chainId: ChainId,
+  userAddress: string
+): Promise<UserDeposit[]> {
+  const userSummary = await fetchUserSummary(chainId, userAddress);
   return userSummary.userReservesData.map((reserve) => {
     return {
       underlyingAsset: reserve.underlyingAsset,
@@ -87,4 +120,67 @@ export async function fetchUserDepositData(
       underlyingBalanceUSD: reserve.underlyingBalanceUSD,
     };
   });
+}
+
+function calculateNetAPY(
+  reserveData: FormatReserveResponse[],
+  userData: ComputedUserReserve[]
+): number {
+  // asset id => apy
+  const supplyAPYs = _.mapValues(
+    _.keyBy(reserveData, (r) => r.underlyingAsset),
+    (r) => parseFloat(r.supplyAPY)
+  );
+  // asset id => apy
+  const vBorrowAPYs = _.mapValues(
+    _.keyBy(reserveData, (r) => r.underlyingAsset),
+    (r) => parseFloat(r.variableBorrowAPY)
+  );
+
+  const supplyWeightedSumAPY = _.sumBy(
+    userData,
+    (r) => parseFloat(r.underlyingBalanceUSD) * supplyAPYs[r.underlyingAsset]
+  );
+  const borrowWeightedSumAPY = _.sumBy(
+    userData,
+    (r) => parseFloat(r.variableBorrowsUSD) * vBorrowAPYs[r.underlyingAsset]
+  );
+  const totalWeightedSumAPY = supplyWeightedSumAPY - borrowWeightedSumAPY;
+
+  const totalWeight =
+    _.sumBy(userData, (r) => parseFloat(r.underlyingBalanceUSD)) -
+    _.sumBy(userData, (r) => parseFloat(r.variableBorrowsUSD));
+
+  return totalWeightedSumAPY / totalWeight;
+}
+
+export async function fetchUserDebtData(
+  chainId: ChainId,
+  userAddress: string
+): Promise<UserDebtSummary> {
+  const userSummary = await fetchUserSummary(chainId, userAddress);
+  const debts = userSummary.userReservesData.map((reserve) => {
+    return {
+      underlyingAsset: reserve.underlyingAsset,
+      name: reserve.reserve.name,
+      symbol: reserve.reserve.symbol,
+      usageAsCollateralEnabledOnUser: reserve.usageAsCollateralEnabledOnUser,
+      scaledVariableDebt: reserve.scaledVariableDebt,
+      variableBorrows: reserve.variableBorrows,
+      variableBorrowsUSD: reserve.variableBorrowsUSD,
+    };
+  });
+
+  const netAPY = calculateNetAPY(
+    await fetchFormattedPoolReserves(chainId),
+    userSummary.userReservesData
+  );
+
+  return {
+    healthFactor: userSummary.healthFactor,
+    netWorthUSD: userSummary.netWorthUSD,
+    availableBorrowsUSD: userSummary.availableBorrowsUSD,
+    netAPY,
+    debts,
+  };
 }

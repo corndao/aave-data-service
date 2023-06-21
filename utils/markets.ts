@@ -13,9 +13,10 @@ interface Market {
   marketReferencePriceInUsd: string;
   usageAsCollateralEnabled: boolean;
   aTokenAddress: string;
+  variableBorrowAPY: string;
 }
 
-export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
+export async function fetchFormattedPoolReserves(chainId: ChainId) {
   const chain = chainConfig[chainId];
   if (!chain) {
     throw new Error("bad chain id");
@@ -42,7 +43,7 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
     lendingPoolAddressProvider: chain.lendingPoolAddressProvider,
   });
 
-  const formattedPoolReserves = formatReserves({
+  return formatReserves({
     reserves: reserves.reservesData,
     currentTimestamp: getTimestamp(),
     marketReferenceCurrencyDecimals:
@@ -50,6 +51,10 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
     marketReferencePriceInUsd:
       reserves.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
   });
+}
+
+export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
+  const formattedPoolReserves = await fetchFormattedPoolReserves(chainId);
 
   return formattedPoolReserves.map((reserve) => {
     return {
@@ -65,6 +70,7 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
       isIsolated: reserve.isIsolated,
       availableLiquidity: reserve.availableLiquidity,
       availableLiquidityUSD: reserve.availableLiquidityUSD,
+      variableBorrowAPY: reserve.variableBorrowAPY,
     };
   });
 }
