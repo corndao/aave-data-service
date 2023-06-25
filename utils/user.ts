@@ -1,9 +1,4 @@
-import {
-  ChainId,
-  ReserveDataHumanized,
-  UiPoolDataProvider,
-  UserReserveData,
-} from "@aave/contract-helpers";
+import { ChainId, UiPoolDataProvider } from "@aave/contract-helpers";
 import {
   ComputedUserReserve,
   FormatReserveResponse,
@@ -11,9 +6,9 @@ import {
   formatUserSummary,
 } from "@aave/math-utils";
 import { ethers } from "ethers";
+import * as _ from "lodash";
 import { chainConfig, getTimestamp } from "./helper";
 import { fetchFormattedPoolReserves } from "./markets";
-import * as _ from "lodash";
 
 interface UserDeposit {
   underlyingAsset: string;
@@ -43,7 +38,7 @@ interface UserDebt {
   variableBorrowsUSD: string;
 }
 
-async function fetchUserSummary(chainId: ChainId, userAddress: string) {
+export async function fetchUserSummary(chainId: ChainId, userAddress: string) {
   const chain = chainConfig[chainId];
   if (!chain) {
     throw new Error("bad chain id");
