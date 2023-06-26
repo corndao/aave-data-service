@@ -14,6 +14,7 @@ interface Market {
   usageAsCollateralEnabled: boolean;
   aTokenAddress: string;
   variableBorrowAPY: string;
+  variableDebtTokenAddress: string;
 }
 
 export async function fetchFormattedPoolReserves(chainId: ChainId) {
@@ -67,6 +68,7 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
       marketReferencePriceInUsd: reserve.priceInUSD,
       usageAsCollateralEnabled: reserve.usageAsCollateralEnabled,
       aTokenAddress: reserve.aTokenAddress,
+      variableDebtTokenAddress: reserve.variableDebtTokenAddress,
       isIsolated: reserve.isIsolated,
       availableLiquidity: reserve.availableLiquidity,
       availableLiquidityUSD: reserve.availableLiquidityUSD,
