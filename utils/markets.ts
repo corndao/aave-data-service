@@ -2,6 +2,7 @@ import { ChainId, UiPoolDataProvider } from "@aave/contract-helpers";
 import { formatReserves } from "@aave/math-utils";
 import { ethers } from "ethers";
 import { chainConfig, getTimestamp } from "./helper";
+import { permitByChainAndToken } from "./permit_config";
 
 interface Market {
   id: string;
@@ -15,6 +16,7 @@ interface Market {
   aTokenAddress: string;
   variableBorrowAPY: string;
   variableDebtTokenAddress: string;
+  supportPermit: boolean;
 }
 
 export async function fetchFormattedPoolReserves(chainId: ChainId) {
@@ -56,6 +58,7 @@ export async function fetchFormattedPoolReserves(chainId: ChainId) {
 
 export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
   const formattedPoolReserves = await fetchFormattedPoolReserves(chainId);
+  const permitConfig = permitByChainAndToken;
 
   return formattedPoolReserves.map((reserve) => {
     return {
@@ -73,6 +76,7 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
       availableLiquidity: reserve.availableLiquidity,
       availableLiquidityUSD: reserve.availableLiquidityUSD,
       variableBorrowAPY: reserve.variableBorrowAPY,
+      supportPermit: !!permitConfig[chainId][reserve.underlyingAsset],
     };
   });
 }
