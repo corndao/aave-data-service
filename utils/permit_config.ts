@@ -42,4 +42,14 @@ export const permitByChainAndToken: {
   [ChainId.optimism]: {
     "0x76fb31fb4af56892a25e32cfc43de717950c9278": false, // aave
   },
+  [1442]: {
+    "0x19b4722bdfebf8ec91365a8bb7642fc58c069110": true,
+    "0x821458d9d723c5bdd2565a84ebfca8e3aed11894": true,
+    "0xa32a1edce878adeec2613964290400e795329d83": true,
+    "0x83ce6ea0b939222719e6c3c373928c700a975a6a": true,
+    "0xcbe68cdd7688ecbfb2f2a381e624dbb47caaf26c": true,
+    "0xc61960a34a53e65b30f50bb2122513c1c8a1bd6a": true,
+    "0x9423502bc4b7ad35ad06545765aeece91dff296a": true,
+    "0xeb5f71ab0f002cab71ce687a4b88b9bfacd33bf6": true,
+  },
 };
