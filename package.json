@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node app/app.ts",
+    "start:prod": "node dist/app/app.js",
     "start:wrangler": "yarn wrangler pages dev ./",
+    "build": "tsc",
     "deploy": "yarn wrangler pages deploy ./ --project-name aave-api --env production",
     "prepare": "husky install"
   },
