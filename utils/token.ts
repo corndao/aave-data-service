@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import Bluebird from "bluebird";
 import { chainConfig } from "./helper";
 import { ChainId } from "@aave/contract-helpers";
 
@@ -27,18 +28,26 @@ export async function fetchTokenBalances(
     url: chain.providerRPC,
   });
 
-  const balanceResults: Promise<string>[] = tokenAddresses.map((address) => {
-    const token = new ethers.Contract(address, abi, provider);
-    return token.balanceOf(account).then((bal: any) => bal.toString());
-  });
+  const balanceResults = Bluebird.map(
+    tokenAddresses,
+    async (address): Promise<string> => {
+      const token = new ethers.Contract(address, abi, provider);
+      return token.balanceOf(account).then((bal: any) => bal.toString());
+    },
+    { concurrency: 5 }
+  );
 
-  const decimalsResults: Promise<number>[] = tokenAddresses.map((address) => {
-    const token = new ethers.Contract(address, abi, provider);
-    return token.decimals();
-  });
+  const decimalsResults = Bluebird.map(
+    tokenAddresses,
+    async (address): Promise<number> => {
+      const token = new ethers.Contract(address, abi, provider);
+      return token.decimals();
+    },
+    { concurrency: 5 }
+  );
 
-  const balances = await Promise.all(balanceResults);
-  const decimals = await Promise.all(decimalsResults);
+  const balances = await balanceResults;
+  const decimals = await decimalsResults;
 
   const results: TokenBalance[] = [];
   for (let i = 0; i < tokenAddresses.length; i++) {

@@ -10,6 +10,7 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.38",
     "@types/lodash": "^4.14.195",
     "husky": "^8.0.3",
     "prettier": "2.8.8",
@@ -23,6 +24,7 @@
     "@bgd-labs/aave-address-book": "^1.24.0",
     "@cloudflare/workers-types": "^4.20230518.0",
     "bignumber.js": "^9.1.1",
+    "bluebird": "^3.7.2",
     "ethers": "5",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.1.13",
