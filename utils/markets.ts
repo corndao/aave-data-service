@@ -23,7 +23,7 @@ interface Market {
 export async function fetchFormattedPoolReserves(chainId: ChainId) {
   const chain = chainConfig[chainId];
   if (!chain) {
-    throw new Error("bad chain id");
+    throw new Error("Bad chain id");
   }
 
   const provider = new ethers.providers.JsonRpcProvider({
