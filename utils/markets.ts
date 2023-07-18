@@ -13,6 +13,7 @@ interface Market {
   supplyAPY: string;
   marketReferencePriceInUsd: string;
   usageAsCollateralEnabled: boolean;
+  borrowingEnabled: boolean;
   aTokenAddress: string;
   variableBorrowAPY: string;
   variableDebtTokenAddress: string;
@@ -60,23 +61,26 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
   const formattedPoolReserves = await fetchFormattedPoolReserves(chainId);
   const permitConfig = permitByChainAndToken;
 
-  return formattedPoolReserves.map((reserve) => {
-    return {
-      id: reserve.id,
-      underlyingAsset: reserve.underlyingAsset,
-      name: reserve.name,
-      symbol: reserve.symbol,
-      decimals: reserve.decimals,
-      supplyAPY: reserve.supplyAPY,
-      marketReferencePriceInUsd: reserve.priceInUSD,
-      usageAsCollateralEnabled: reserve.usageAsCollateralEnabled,
-      aTokenAddress: reserve.aTokenAddress,
-      variableDebtTokenAddress: reserve.variableDebtTokenAddress,
-      isIsolated: reserve.isIsolated,
-      availableLiquidity: reserve.availableLiquidity,
-      availableLiquidityUSD: reserve.availableLiquidityUSD,
-      variableBorrowAPY: reserve.variableBorrowAPY,
-      supportPermit: !!permitConfig[chainId][reserve.underlyingAsset],
-    };
-  });
+  return formattedPoolReserves
+    .filter((reserve) => !reserve.isFrozen && !reserve.isPaused)
+    .map((reserve) => {
+      return {
+        id: reserve.id,
+        underlyingAsset: reserve.underlyingAsset,
+        name: reserve.name,
+        symbol: reserve.symbol,
+        decimals: reserve.decimals,
+        supplyAPY: reserve.supplyAPY,
+        marketReferencePriceInUsd: reserve.priceInUSD,
+        usageAsCollateralEnabled: reserve.usageAsCollateralEnabled,
+        borrowingEnabled: reserve.borrowingEnabled,
+        aTokenAddress: reserve.aTokenAddress,
+        variableDebtTokenAddress: reserve.variableDebtTokenAddress,
+        isIsolated: reserve.isIsolated,
+        availableLiquidity: reserve.availableLiquidity,
+        availableLiquidityUSD: reserve.availableLiquidityUSD,
+        variableBorrowAPY: reserve.variableBorrowAPY,
+        supportPermit: !!permitConfig[chainId][reserve.underlyingAsset],
+      };
+    });
 }
