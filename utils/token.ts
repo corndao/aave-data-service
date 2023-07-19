@@ -6,10 +6,9 @@ import { ChainId } from "@aave/contract-helpers";
 interface TokenBalance {
   token: string;
   balance: string;
-  decimals: number;
 }
 
-const abi = `[{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}]`;
+const balanceProviderAbi = `[{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"address","name":"token","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"users","type":"address[]"},{"internalType":"address[]","name":"tokens","type":"address[]"}],"name":"batchBalanceOf","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"provider","type":"address"},{"internalType":"address","name":"user","type":"address"}],"name":"getUserWalletBalances","outputs":[{"internalType":"address[]","name":"","type":"address[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"stateMutability":"payable","type":"receive"}]`;
 
 export async function fetchTokenBalances(
   chainId: ChainId,
@@ -28,33 +27,22 @@ export async function fetchTokenBalances(
     url: chain.providerRPC,
   });
 
-  const balanceResults = Bluebird.map(
-    tokenAddresses,
-    async (address): Promise<string> => {
-      const token = new ethers.Contract(address, abi, provider);
-      return token.balanceOf(account).then((bal: any) => bal.toString());
-    },
-    { concurrency: 5 }
+  const balanceProvider = new ethers.Contract(
+    chainConfig[chainId].walletBalanceProvider,
+    balanceProviderAbi,
+    provider
   );
 
-  const decimalsResults = Bluebird.map(
-    tokenAddresses,
-    async (address): Promise<number> => {
-      const token = new ethers.Contract(address, abi, provider);
-      return token.decimals();
-    },
-    { concurrency: 5 }
+  const balances: string[] = await balanceProvider.batchBalanceOf(
+    [account],
+    tokenAddresses
   );
-
-  const balances = await balanceResults;
-  const decimals = await decimalsResults;
 
   const results: TokenBalance[] = [];
   for (let i = 0; i < tokenAddresses.length; i++) {
     results.push({
       token: tokenAddresses[i],
-      balance: balances[i],
-      decimals: decimals[i],
+      balance: balances[i].toString(),
     });
   }
 
