@@ -2,7 +2,6 @@
   "name": "aave-data-api",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "Daniel Wang",
   "license": "MIT",
   "scripts": {
     "start": "ts-node app/app.ts",
