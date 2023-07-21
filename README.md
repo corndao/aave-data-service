@@ -12,6 +12,13 @@ AAVE NEAR BOS: https://near.org/aave-v3.near/widget/AAVE
 
 - `yarn deploy`
 
+## Support Chains
+
+- Ethereum Mainnet (1)
+- Arbitrum One (42161)
+- Polygon Mainnet (137)
+- ZkEVM Testnet (1442)
+
 ## APIs
 
 - markets
