@@ -28,6 +28,7 @@ router.get("/:chainId/debts/:user", async (ctx) => {
   );
 });
 
+// NOTE: this endpoint will be deprecated
 router.get("/:chainId/balances", async (ctx) => {
   const { searchParams } = new URL(ctx.request.URL);
   const account = searchParams.get("account");
