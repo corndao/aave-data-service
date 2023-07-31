@@ -31,6 +31,10 @@ export async function calculateHealthFactor(
   if (!targetReserve) {
     throw new Error("bad asset id");
   }
+  if (!targetReserve.usageAsCollateralEnabled) {
+    return userSummary.healthFactor;
+  }
+
   const reserveLiquidationThreshold =
     parseInt(targetReserve.reserveLiquidationThreshold) / 10000;
 
