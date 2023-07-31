@@ -31,7 +31,11 @@ export async function calculateHealthFactor(
   if (!targetReserve) {
     throw new Error("bad asset id");
   }
-  if (!targetReserve.usageAsCollateralEnabled || targetReserve.isIsolated) {
+  if (
+    ((action === UserAction.Deposit || action === UserAction.Withdraw) &&
+      !targetReserve.usageAsCollateralEnabled) ||
+    targetReserve.isIsolated
+  ) {
     return userSummary.healthFactor;
   }
 
