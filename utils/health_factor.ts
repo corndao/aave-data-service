@@ -31,7 +31,7 @@ export async function calculateHealthFactor(
   if (!targetReserve) {
     throw new Error("bad asset id");
   }
-  if (!targetReserve.usageAsCollateralEnabled) {
+  if (!targetReserve.usageAsCollateralEnabled || targetReserve.isIsolated) {
     return userSummary.healthFactor;
   }
 
