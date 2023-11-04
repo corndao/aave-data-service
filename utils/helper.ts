@@ -16,7 +16,7 @@ export const chainConfig: {
     walletBalanceProvider: markets.AaveV3Arbitrum.WALLET_BALANCE_PROVIDER,
   },
   [ChainId.mainnet]: {
-    providerRPC: "https://eth-rpc.gateway.pokt.network",
+    providerRPC: "https://ethereum.publicnode.com",
     uiPoolDataProviderAddress: markets.AaveV3Ethereum.UI_POOL_DATA_PROVIDER,
     lendingPoolAddressProvider: markets.AaveV3Ethereum.POOL_ADDRESSES_PROVIDER,
     walletBalanceProvider: markets.AaveV3Ethereum.WALLET_BALANCE_PROVIDER,
