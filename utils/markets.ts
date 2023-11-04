@@ -59,11 +59,24 @@ export async function fetchFormattedPoolReserves(chainId: ChainId) {
 
 export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
   const formattedPoolReserves = await fetchFormattedPoolReserves(chainId);
-  const permitConfig = permitByChainAndToken;
+  const permitConfig = permitByChainAndToken[chainId];
 
+  // If there is no permitConfig for this chainId, log an error and return an empty array
+  if (!permitConfig) {
+    console.error(`Permit config for chainId ${chainId} is not defined`);
+    return [];
+  }
+
+  // Ensure that the returned array matches the Market interface structure
   return formattedPoolReserves
     .filter((reserve) => !reserve.isFrozen && !reserve.isPaused)
     .map((reserve) => {
+      // Ensure that you're inside the .map() callback when accessing reserve
+      const underlyingAssetPermit = permitConfig[reserve.underlyingAsset];
+      if (typeof underlyingAssetPermit === 'undefined') {
+        console.error(`Permit config for underlyingAsset ${reserve.underlyingAsset} on chainId ${chainId} is not defined`);
+      }
+      // The object returned here must match the Market interface
       return {
         id: reserve.id,
         underlyingAsset: reserve.underlyingAsset,
@@ -80,7 +93,7 @@ export async function fetchMarketsData(chainId: ChainId): Promise<Market[]> {
         availableLiquidity: reserve.availableLiquidity,
         availableLiquidityUSD: reserve.availableLiquidityUSD,
         variableBorrowAPY: reserve.variableBorrowAPY,
-        supportPermit: !!permitConfig[chainId][reserve.underlyingAsset],
+        supportPermit: !!underlyingAssetPermit,
       };
     });
 }
