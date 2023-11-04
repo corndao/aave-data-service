@@ -1,5 +1,5 @@
 {
-  "name": "aave-data-api",
+  "name": "spark-data-service",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -8,7 +8,7 @@
     "start:prod": "node dist/app/app.js",
     "start:wrangler": "yarn wrangler pages dev ./",
     "build": "tsc",
-    "deploy": "yarn wrangler pages deploy ./ --project-name aave-api --env production",
+    "deploy": "yarn wrangler pages deploy ./ --project-name spark-api --env production",
     "prepare": "husky install"
   },
   "devDependencies": {
