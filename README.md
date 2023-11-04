@@ -27,8 +27,11 @@ Before running the service locally, ensure you have the following installed:
 
 ## Deployment
 
-Deploy the service to Cloudflare Pages with the `yarn deploy` command. Ensure you have the correct permissions and environmental variables set.
 
+Deploy the service to Cloudflare Pages with the `yarn deploy` command. 
+Prior to this, ensure you have the correct permissions and environmental variables set up.
+
+i.e. in the [Cloudflare Dashboard]([url](https://dash.cloudflare.com/)), under `Workers & Pages` create a Page with name `spark-api` and link it to the correct Github Repo.
 
 ## Support Chains (chainID)
 
