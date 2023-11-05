@@ -12,6 +12,7 @@ https://github.com/marsfoundation/sparklend
 ## Getting Started
 
 You can deploy this locally, or have it run on Cloudflare.
+We have deployed it at `https://spark-api.pages.dev/`
 
 ### Prerequisites
 
@@ -48,7 +49,9 @@ i.e. in the [Cloudflare Dashboard]([url](https://dash.cloudflare.com/)), under `
   - Get all available Spark Lend markets
   - `chainId`: Spark Lend supported chain ID
  
-    Example query: http://localhost:8080/100/markets
+    Example query: https://spark-api.pages.dev/100/markets
+    
+    Example local query: http://localhost:8080/100/markets
 
 - deposits
 
@@ -57,8 +60,10 @@ i.e. in the [Cloudflare Dashboard]([url](https://dash.cloudflare.com/)), under `
   - `chainId`: Spark Lend supported chain ID
   - `user`: user address
 
-  Example query: http://localhost:8080/100/deposits/0xca4aD39F872E89Ef23eABd5716363Fc22513E147
+  Example query: https://spark-api.pages.dev/100/deposits/0xca4aD39F872E89Ef23eABd5716363Fc22513E147
   
+  Example local query: http://localhost:8080/100/deposits/0xca4aD39F872E89Ef23eABd5716363Fc22513E147
+
 - debts
 
   - `GET` `/:chainId/debts/:user`
@@ -66,7 +71,9 @@ i.e. in the [Cloudflare Dashboard]([url](https://dash.cloudflare.com/)), under `
   - `chainId`: Spark Lend supported chain ID
   - `user`: user address
  
-    Example query: http://localhost:8080/100/debts/0xca4aD39F872E89Ef23eABd5716363Fc22513E147
+    Example query: https://spark-api.pages.dev/100/debts/0xca4aD39F872E89Ef23eABd5716363Fc22513E147
+    
+    Example local query: http://localhost:8080/100/debts/0xca4aD39F872E89Ef23eABd5716363Fc22513E147
 
 - health factor
   - `GET` `/:chainId/health/:user`
@@ -78,7 +85,9 @@ i.e. in the [Cloudflare Dashboard]([url](https://dash.cloudflare.com/)), under `
     - `amount`: token USD value
     - `asset`: token address
    
-    Example query: http://localhost:8080/100/health/0xca4aD39F872E89Ef23eABd5716363Fc22513E147?action=deposit&amount=10&asset=0xe91d153e0b41518a2ce8dd3d7944fa863463a97d
+    Example query: https://spark-api.pages.dev/100/health/0xca4aD39F872E89Ef23eABd5716363Fc22513E147?action=deposit&amount=10&asset=0xe91d153e0b41518a2ce8dd3d7944fa863463a97d
+    
+    Example local query: http://localhost:8080/100/health/0xca4aD39F872E89Ef23eABd5716363Fc22513E147?action=deposit&amount=10&asset=0xe91d153e0b41518a2ce8dd3d7944fa863463a97d
 
 
 
