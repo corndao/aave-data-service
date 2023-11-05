@@ -1,13 +1,14 @@
 # Data Service for Spark Protocol BOS Component
 
-This service aggregates data from Spark Protocol across multiple chains, providing a crucial link between Spark Lend and applications that wish to utilize its data. Spark Lend, based on the Aave v3 codebase, is currently live on Gnosis and Ethereum.
-https://github.com/marsfoundation/sparklend
+This service aggregates data from Spark Protocol across multiple chains, providing a crucial link between Spark Lend and applications that wish to utilize its data. [Spark Lend](https://github.com/marsfoundation/sparklend), based on the Aave v3 codebase, is currently live on Gnosis and Ethereum.
+
 
 ## Features
 
 - Aggregates and serves market data from Spark Lend.
 - Provides user-specific deposit, debt, and health factor information.
 - Supports multiple blockchains (i.e. where Spark Protocol is deployed)
+- Is accesible as public API
 
 ## Getting Started
 
