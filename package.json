@@ -8,7 +8,7 @@
     "start:prod": "node dist/app/app.js",
     "start:wrangler": "yarn wrangler pages dev ./",
     "build": "tsc",
-    "deploy": "yarn wrangler pages deploy ./ --project-name spark-api --env production",
+    "deploy": "yarn wrangler pages deploy ./ --project-name aave-nexus --env production",
     "prepare": "husky install"
   },
   "devDependencies": {
